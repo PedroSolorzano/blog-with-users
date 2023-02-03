@@ -11,7 +11,6 @@ from flask_gravatar import Gravatar
 from functools import wraps
 from sqlalchemy import ForeignKey
 import os
-import re
 
 # Time
 from datetime import datetime
@@ -19,17 +18,13 @@ time = datetime.now()
 
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.environ.get('8BYkEfBA6O6donzWlSihBXox7C0sKR6b')
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 ckeditor = CKEditor(app)
 Bootstrap(app)
 
 # CONNECT TO DB
 app.app_context().push()
-uri = os.getenv("DATABASE_URL")  # or other relevant config var
-if uri and uri.startswith("postgres://"):
-    uri = uri.replace("postgres://", "postgresql://", 1)
-# rest of connection code using the connection string `uri`
-app.config['SQLALCHEMY_DATABASE_URI'] = uri
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL", "sqlite:///blog.db")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
